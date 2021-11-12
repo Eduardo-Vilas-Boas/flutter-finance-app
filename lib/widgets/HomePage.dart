@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_finance_app/components/CategorySpendingChart.dart';
 import 'package:flutter_finance_app/models/UserTransaction.dart';
 import 'package:flutter_finance_app/services/database.dart' as db;
-import 'package:flutter_finance_app/widgets/transaction_list.dart';
-
-import 'chart.dart';
-import 'new_transaction.dart';
+import 'package:flutter_finance_app/components/TransactionList.dart';
+import 'package:flutter_finance_app/components/NewTransaction.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,6 +12,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<UserTransaction> userTransactionList = [];
+  List<dynamic> categorySpending = [];
+  List<UserTransaction> recentTransactions = [];
 
   Future<void> getTransactionList() async {
     List<UserTransaction> userTransactionListTemp = await db.getTransactions();
@@ -22,20 +23,35 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> getCategorySpending() async {
+    List<dynamic> categorySpendingTemp = await db.getCategorySpending();
+
+    print("categorySpendingTemp: " + categorySpendingTemp.toString());
+
+    setState(() {
+      categorySpending = categorySpendingTemp;
+    });
+  }
+
+  Future<void> getRecentTransactions() async {
+    List<UserTransaction> recentTransactionsTemp =
+        await db.getRecentTransactions();
+
+    setState(() {
+      recentTransactions = recentTransactionsTemp;
+    });
+  }
+
+  void executeUpdate() {
+    getTransactionList();
+    getCategorySpending();
+    getRecentTransactions();
+  }
+
   @override
   void initState() {
     super.initState();
-    getTransactionList();
-  }
-
-  List<UserTransaction> get _recentTransactions {
-    return userTransactionList.where((tx) {
-      return tx.date.isAfter(
-        DateTime.now().subtract(
-          Duration(days: 7),
-        ),
-      );
-    }).toList();
+    executeUpdate();
   }
 
   void _startAddNewTransaction(BuildContext context) {
@@ -44,7 +60,7 @@ class _HomePageState extends State<HomePage> {
       builder: (bContext) {
         return GestureDetector(
           onTap: () {},
-          child: NewTransaction(db.saveTransaction),
+          child: NewTransaction(db.saveTransaction, executeUpdate),
           behavior: HitTestBehavior.opaque,
         );
       },
@@ -53,21 +69,21 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print("userTransactionList: " + userTransactionList.toString());
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Finance App'),
       ),
       body: SingleChildScrollView(
+          child: Padding(
+        padding: EdgeInsets.only(top: 40.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Chart(_recentTransactions),
-            TransactionList(userTransactionList),
+            BarChartSample3(categorySpending: this.categorySpending),
+            TransactionList(recentTransactions),
           ],
         ),
-      ),
+      )),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
