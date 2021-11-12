@@ -23,7 +23,7 @@ Future<void> startDatabase() async {
       onCreate: (Database db, int version) async {
     // When creating the db, create the table
 
-    String sqlCommand = "CREATE TABLE " + TABLENAME +  " (" +
+    String sqlCommand = "CREATE TABLE IF NOT EXISTS " + TABLENAME +  " (" +
         ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
         CATEGORY + " TEXT, " + 
         DESCRIPTION + " TEXT, " + 
@@ -67,8 +67,8 @@ Future<List<UserTransaction>> getTransactions() async {
       category: transactionList[i][CATEGORY],
       description: transactionList[i][DESCRIPTION],
       amount: double.parse(transactionList[i][AMOUNT].toString()),
-      date: DateTime.fromMicrosecondsSinceEpoch(transactionList[i][DATE]));
-
+      date: DateTime.fromMillisecondsSinceEpoch(transactionList[i][DATE]));
+  
     userTransactionList.add(userTransaction);
   }
 

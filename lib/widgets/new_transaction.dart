@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_finance_app/models/Category.dart';
+import 'package:select_form_field/select_form_field.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addTransaction;
@@ -13,6 +15,27 @@ class _NewTransactionState extends State<NewTransaction> {
   final categoryController = TextEditingController();
   final descriptionController = TextEditingController();
   final amountController = TextEditingController();
+  List<Map<String, dynamic>> _items = [];
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    List<Map<String, dynamic>> _itemsTemp = [];
+    
+    Category.categoryDictionary.forEach((key, value) => 
+      _itemsTemp.add({
+        'value': key,
+        'label': key,
+        'icon': value
+        })
+    );
+
+    setState(() {
+      _items = _itemsTemp;
+    });
+  }
 
   void submitData() {
     final enteredCategory = categoryController.text;
@@ -41,10 +64,14 @@ class _NewTransactionState extends State<NewTransaction> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    TextField(
-                      decoration: InputDecoration(labelText: 'Category'),
-                      controller: categoryController,
-                      onSubmitted: (_) => submitData(),
+                    SelectFormField(
+                      type: SelectFormFieldType.dropdown, // or can be dialog
+                      initialValue: null,
+                      labelText: 'Spending category',
+                      items: _items,
+                      onChanged: (val) => setState(() {
+                        categoryController.text = val;
+                      }),
                     ),
                     TextField(
                       decoration: InputDecoration(labelText: 'Description'),

@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
               ),
             ),
         appBarTheme: AppBarTheme(
-          titleTextStyle: ThemeData.light().textTheme.bodyText1.copyWith(
+          titleTextStyle: ThemeData.light().textTheme.bodyText1!.copyWith(
               fontFamily: 'OpenSans',
               fontSize: 20,
               fontWeight: FontWeight.bold,
