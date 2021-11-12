@@ -10,21 +10,24 @@ class NewTransaction extends StatefulWidget {
 }
 
 class _NewTransactionState extends State<NewTransaction> {
-  final inputController = TextEditingController();
-
+  final categoryController = TextEditingController();
+  final descriptionController = TextEditingController();
   final amountController = TextEditingController();
 
   void submitData() {
-    final enteredTitle = inputController.text;
+    final enteredCategory = categoryController.text;
+    final enteredDescription = descriptionController.text;
     final enteredAmount = double.parse(amountController.text);
 
-    if (enteredTitle.isEmpty || enteredAmount <= 0) {
+    if (enteredCategory.isEmpty || enteredDescription.isEmpty || enteredAmount <= 0) {
       return;
     }
 
     widget.addTransaction(
-      enteredTitle,
-      enteredAmount
+      enteredCategory,
+      enteredDescription,
+      enteredAmount,
+      DateTime.now().millisecondsSinceEpoch
     );
     Navigator.of(context).pop();
   }
@@ -39,8 +42,13 @@ class _NewTransactionState extends State<NewTransaction> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     TextField(
-                      decoration: InputDecoration(labelText: 'Title'),
-                      controller: inputController,
+                      decoration: InputDecoration(labelText: 'Category'),
+                      controller: categoryController,
+                      onSubmitted: (_) => submitData(),
+                    ),
+                    TextField(
+                      decoration: InputDecoration(labelText: 'Description'),
+                      controller: descriptionController,
                       onSubmitted: (_) => submitData(),
                     ),
                     TextField(
@@ -49,9 +57,8 @@ class _NewTransactionState extends State<NewTransaction> {
                       keyboardType: TextInputType.number,
                       onSubmitted: (_) => submitData(),
                     ),
-                    FlatButton(
+                    TextButton(
                       child: Text('Add Transaction'),
-                      textColor: Theme.of(context).primaryColor,
                       onPressed: submitData,
                     )
                   ],
