@@ -2,23 +2,25 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_finance_app/models/Category.dart';
 
-class CategorySpendingChart extends StatelessWidget {
+class BarChartImplementation extends StatelessWidget {
   final List<dynamic> categorySpending;
 
-  const CategorySpendingChart({required this.categorySpending, Key? key})
+  const BarChartImplementation({required this.categorySpending, Key? key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BarChart(
-      BarChartData(
-        barTouchData: barTouchData,
-        titlesData: titlesData,
-        borderData: borderData,
-        barGroups: barGroups,
-        alignment: BarChartAlignment.spaceAround,
-      ),
-    );
+    return Padding(
+        padding: EdgeInsets.only(top: 40),
+        child: BarChart(
+          BarChartData(
+            barTouchData: barTouchData,
+            titlesData: titlesData,
+            borderData: borderData,
+            barGroups: barGroups,
+            alignment: BarChartAlignment.spaceAround,
+          ),
+        ));
   }
 
   BarTouchData get barTouchData => BarTouchData(
@@ -90,17 +92,17 @@ class CategorySpendingChart extends StatelessWidget {
       }).toList();
 }
 
-class BarChartSample3 extends StatefulWidget {
+class CategorySpendingChart extends StatefulWidget {
   final List<dynamic> categorySpending;
 
-  const BarChartSample3({required this.categorySpending, Key? key})
+  const CategorySpendingChart({required this.categorySpending, Key? key})
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => BarChartSample3State();
+  State<StatefulWidget> createState() => CategorySpendingChartState();
 }
 
-class BarChartSample3State extends State<BarChartSample3> {
+class CategorySpendingChartState extends State<CategorySpendingChart> {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
@@ -109,7 +111,7 @@ class BarChartSample3State extends State<BarChartSample3> {
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         color: Colors.white,
-        child: CategorySpendingChart(
+        child: BarChartImplementation(
             categorySpending: this.widget.categorySpending),
       ),
     );

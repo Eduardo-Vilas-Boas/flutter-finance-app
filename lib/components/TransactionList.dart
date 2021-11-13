@@ -18,10 +18,14 @@ class TransactionList extends StatelessWidget {
                 Text(
                   'No transactions added yet!',
                   style: Theme.of(context).textTheme.bodyText1,
-                  
                 ),
-                SizedBox(height: 10,),
-                Container(height: 200, child: Image.asset('assets/images/waiting.png', fit: BoxFit.cover)),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                    height: 200,
+                    child: Image.asset('assets/images/waiting.png',
+                        fit: BoxFit.cover)),
               ],
             )
           : ListView.builder(
@@ -51,11 +55,21 @@ class TransactionList extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            transactions[index].category + " - " + transactions[index].description,
+                            transactions[index].category +
+                                " - " +
+                                transactions[index].description,
                             style: Theme.of(context).textTheme.bodyText1,
                           ),
                           Text(
-                            transactions[index].date.toString(),
+                            transactions[index].date.day.toString() +
+                                "/" +
+                                transactions[index].date.month.toString() +
+                                "/" +
+                                transactions[index].date.year.toString() +
+                                " " +
+                                transactions[index].date.hour.toString() +
+                                ":" +
+                                transactions[index].date.minute.toString(),
                             style: TextStyle(color: Colors.grey),
                           ),
                         ],

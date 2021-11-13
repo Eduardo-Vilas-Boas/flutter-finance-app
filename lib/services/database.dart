@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter_finance_app/models/UserTransaction.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -92,6 +90,35 @@ Future<List> getCategorySpending() async {
   }
 
   return categorySpending;
+}
+
+Future<List> getTransactionListByCategory(String category) async {
+  var database = await openDatabase(DATABASE_NAME);
+
+  String sqlScript = "SELECT * FROM " +
+      TABLENAME +
+      " WHERE " +
+      CATEGORY +
+      " = '" +
+      category +
+      "' ORDER BY " +
+      DATE;
+
+  List<Map> transactionList = await database.rawQuery(sqlScript);
+  List<UserTransaction> userTransactionList = [];
+
+  for (var i = 0; i < transactionList.length; i = i + 1) {
+    UserTransaction userTransaction = new UserTransaction(
+        id: transactionList[i][ID],
+        category: transactionList[i][CATEGORY],
+        description: transactionList[i][DESCRIPTION],
+        amount: double.parse(transactionList[i][AMOUNT].toString()),
+        date: DateTime.fromMillisecondsSinceEpoch(transactionList[i][DATE]));
+
+    userTransactionList.add(userTransaction);
+  }
+
+  return userTransactionList;
 }
 
 Future<List<UserTransaction>> getRecentTransactions() async {

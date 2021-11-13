@@ -7,34 +7,43 @@ class Category {
   static final icon = "ICON";
   static final color = "COLOR";
 
+  static final List<String> categoryOrder = [
+    "Transports",
+    "Education",
+    "Healthcare",
+    "Finances",
+    "Utilities",
+    "Food",
+    "Personal",
+    "Recreation",
+    "Miscellaneous"
+  ];
+
   static final categoryDictionary = {
-    'Transports': {
+    categoryOrder[0]: {
       icon: Icon(Icons.directions_car_filled_sharp),
       color: Colors.red
     },
-    'Education': {icon: Icon(Icons.book_outlined), color: Colors.pink},
-    'Healthcare': {
+    categoryOrder[1]: {icon: Icon(Icons.book_outlined), color: Colors.pink},
+    categoryOrder[2]: {
       icon: Icon(Icons.health_and_safety_outlined),
       color: Colors.blue
     },
-    'Saving, Investing, & Debt Payments': {
+    categoryOrder[3]: {
       icon: Icon(Icons.monetization_on_outlined),
       color: Colors.green
     },
-    'Utilities': {
+    categoryOrder[4]: {
       icon: Icon(Icons.emoji_objects_outlined),
       color: Colors.yellow
     },
-    'Food': {icon: Icon(Icons.flatware_outlined), color: Colors.black},
-    'Personal spending': {
-      icon: Icon(Icons.person_outline),
-      color: Colors.purple
+    categoryOrder[5]: {
+      icon: Icon(Icons.flatware_outlined),
+      color: Colors.black
     },
-    'Recreation & Entertainment': {
-      icon: Icon(Icons.cake_outlined),
-      color: Colors.grey
-    },
-    'Miscellaneous': {
+    categoryOrder[6]: {icon: Icon(Icons.person_outline), color: Colors.purple},
+    categoryOrder[7]: {icon: Icon(Icons.cake_outlined), color: Colors.grey},
+    categoryOrder[8]: {
       icon: Icon(Icons.not_listed_location_outlined),
       color: Colors.orange
     }
