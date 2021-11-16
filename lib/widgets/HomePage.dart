@@ -71,26 +71,31 @@ class _HomePageState extends State<HomePage> {
       builder: (bContext) {
         return GestureDetector(
           onTap: () {},
-          child: NewTransaction(db.saveTransaction, executeUpdate),
+          child: NewTransaction(
+              addTransaction: db.saveTransaction, executeUpdate: executeUpdate),
           behavior: HitTestBehavior.opaque,
         );
       },
     );
   }
 
+  static final cummulative = "Cummulative";
+  static final total = "Total";
+  static final recent = "Recent";
+
   String _itemSelected = 'Cummulative';
   final List<Map<String, dynamic>> _items = [
     {
-      'value': 'Cummulative',
-      'label': 'Cummulative',
+      'value': cummulative,
+      'label': cummulative,
     },
     {
-      'value': 'Total',
-      'label': 'Total',
+      'value': total,
+      'label': total,
     },
     {
-      'value': 'Recent',
-      'label': 'Recent',
+      'value': recent,
+      'label': recent,
     },
   ];
 
@@ -113,9 +118,12 @@ class _HomePageState extends State<HomePage> {
               }),
               onSaved: (val) => print(val),
             ),
-            CategorySpendingChart(categorySpending: categorySpending),
-            CummulativeSpendingChart(timeSeries: userTransactionByCategoryList),
-            TransactionList(recentTransactions),
+            _itemSelected == total
+                ? CategorySpendingChart(categorySpending: categorySpending)
+                : (_itemSelected == cummulative
+                    ? CummulativeSpendingChart(
+                        timeSeries: userTransactionByCategoryList)
+                    : TransactionList(recentTransactions, executeUpdate)),
           ],
         ),
       ),

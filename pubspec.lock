@@ -123,15 +123,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
-  multi_select_flutter:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: master
-      resolved-ref: ec4b68f5a51e7f9b9136821d5dd83d0ce0fe2b05
-      url: "git@github.com:Eduardo-Vilas-Boas/multi_select_flutter.git"
-    source: git
-    version: "3.1.8"
   path:
     dependency: transitive
     description:

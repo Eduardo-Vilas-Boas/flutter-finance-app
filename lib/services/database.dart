@@ -65,6 +65,51 @@ Future<void> saveTransaction(
   await database.rawInsert(sqlScript, [category, description, amount, date]);
 }
 
+Future<void> updateTransaction(int id, String category, String description,
+    double amount, int date) async {
+  var database = await openDatabase(DATABASE_NAME);
+
+  String sqlScript = "UPDATE " +
+      TABLENAME +
+      " SET " +
+      CATEGORY +
+      " = '" +
+      category +
+      "', " +
+      DESCRIPTION +
+      " = '" +
+      description +
+      "', " +
+      AMOUNT +
+      " = " +
+      amount.toString() +
+      ", " +
+      DATE +
+      " = " +
+      date.toString() +
+      " WHERE " +
+      ID +
+      " = " +
+      id.toString();
+
+  print("sqlScript: " + sqlScript);
+
+  // Update some record
+  await database.rawUpdate(sqlScript);
+}
+
+Future<void> deleteTransaction(int id) async {
+  var database = await openDatabase(DATABASE_NAME);
+
+  String sqlScript =
+      "DELETE FROM " + TABLENAME + " WHERE " + ID + " = " + id.toString();
+
+  print("sqlScript: " + sqlScript);
+
+  // Update some record
+  await database.rawDelete(sqlScript);
+}
+
 Future<List> getCategorySpending() async {
   var database = await openDatabase(DATABASE_NAME);
 

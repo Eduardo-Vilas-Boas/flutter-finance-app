@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_finance_app/models/Category.dart';
-import 'package:select_form_field/select_form_field.dart';
+
+import 'TransactionForm.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addTransaction;
 
   final void Function() executeUpdate;
 
-  NewTransaction(this.addTransaction, this.executeUpdate);
+  NewTransaction({required this.addTransaction, required this.executeUpdate});
 
   @override
   _NewTransactionState createState() => _NewTransactionState();
@@ -17,35 +17,40 @@ class _NewTransactionState extends State<NewTransaction> {
   final categoryController = TextEditingController();
   final descriptionController = TextEditingController();
   final amountController = TextEditingController();
-  List<Map<String, dynamic>> _items = [];
-
-  @override
-  void initState() {
-    super.initState();
-
-    List<Map<String, dynamic>> _itemsTemp = [];
-
-    Category.categoryDictionary.forEach((key, value) => _itemsTemp
-        .add({'value': key, 'label': key, 'icon': value[Category.icon]}));
-
-    setState(() {
-      _items = _itemsTemp;
-    });
-  }
+  final dateController = TextEditingController();
+  final timeController = TextEditingController();
 
   void submitData() {
-    final enteredCategory = categoryController.text;
-    final enteredDescription = descriptionController.text;
-    final enteredAmount = double.parse(amountController.text);
+    FocusScope.of(context).unfocus();
+    new TextEditingController().clear();
 
-    if (enteredCategory.isEmpty ||
-        enteredDescription.isEmpty ||
-        enteredAmount <= 0) {
+    if (amountController.text.isEmpty) {
       return;
     }
 
-    widget.addTransaction(enteredCategory, enteredDescription, enteredAmount,
-        DateTime.now().millisecondsSinceEpoch);
+    final enteredCategory = categoryController.text;
+    final enteredDescription = descriptionController.text;
+    final enteredAmount = double.parse(amountController.text);
+    final enteredDate = dateController.text;
+    final enteredTime = timeController.text;
+
+    if (enteredCategory.isEmpty ||
+        enteredDescription.isEmpty ||
+        enteredAmount <= 0 ||
+        enteredDate.isEmpty ||
+        enteredTime.isEmpty) {
+      return;
+    }
+
+    var date = DateTime.parse(enteredDate);
+    var timeArray = enteredTime.split(":");
+    var hour = int.parse(timeArray[0]);
+    var minute = int.parse(timeArray[1]);
+
+    date = DateTime(date.year, date.month, date.day, hour, minute);
+
+    this.widget.addTransaction(enteredCategory, enteredDescription,
+        enteredAmount, date.millisecondsSinceEpoch);
     this.widget.executeUpdate();
     Navigator.of(context).pop();
   }
@@ -59,26 +64,14 @@ class _NewTransactionState extends State<NewTransaction> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            SelectFormField(
-              type: SelectFormFieldType.dropdown, // or can be dialog
-              initialValue: null,
-              labelText: 'Spending category',
-              items: _items,
-              onChanged: (val) => setState(() {
-                categoryController.text = val;
-              }),
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Description'),
-              controller: descriptionController,
-              onSubmitted: (_) => submitData(),
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Amount'),
-              controller: amountController,
-              keyboardType: TextInputType.number,
-              onSubmitted: (_) => submitData(),
-            ),
+            TransactionForm(
+                executeUpdate: this.widget.executeUpdate,
+                submitData: this.submitData,
+                categoryController: this.categoryController,
+                descriptionController: this.descriptionController,
+                amountController: this.amountController,
+                dateController: this.dateController,
+                timeController: this.timeController),
             TextButton(
               child: Text('Add Transaction'),
               onPressed: submitData,
