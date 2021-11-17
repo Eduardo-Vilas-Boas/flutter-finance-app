@@ -169,15 +169,7 @@ Future<List> getTransactionListByCategory(String category) async {
 Future<List<UserTransaction>> getRecentTransactions() async {
   var database = await openDatabase(DATABASE_NAME);
 
-  int oneWeekBefore =
-      DateTime.now().subtract(Duration(days: 7)).millisecondsSinceEpoch;
-
-  String sqlScript = 'SELECT * FROM ' +
-      TABLENAME +
-      " WHERE " +
-      DATE +
-      " >= " +
-      oneWeekBefore.toString();
+  String sqlScript = 'SELECT * FROM ' + TABLENAME;
 
   List<Map> transactionList = await database.rawQuery(sqlScript);
 
