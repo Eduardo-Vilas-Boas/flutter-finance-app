@@ -28,7 +28,7 @@ void _generateCsvFile(List<UserTransaction> userTransactionList) async {
     row.add(userTransactionList[i].category);
     row.add(userTransactionList[i].description);
     row.add(userTransactionList[i].amount);
-    row.add(userTransactionList[i].id);
+    row.add(userTransactionList[i].date.toString());
     rows.add(row);
   }
 
@@ -189,80 +189,89 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Finance App'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            SelectFormField(
-              type: SelectFormFieldType.dropdown, // or can be dialog
-              labelText: 'View',
-              items: _itemViewList,
-              onChanged: (val) => setState(() {
-                _itemViewSelected = val;
-              }),
-              onSaved: (val) => print(val),
-            ),
-            SelectFormField(
-              type: SelectFormFieldType.dropdown, // or can be dialog
-              initialValue: null,
-              labelText: 'Spending category',
-              items: _itemCategoryList,
-              onChanged: (val) => setState(() {
-                this.categoryController.text = val;
-              }),
-            ),
-            Row(
-              children: [
-                Expanded(
-                    flex: 1,
-                    child: TextField(
-                      readOnly: true,
-                      controller: this.startDateController,
-                      decoration: InputDecoration(hintText: 'Start Date'),
-                      onTap: () async {
-                        var date = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2100));
-                        setState(() {
-                          this.startDateController.text =
-                              date.toString().substring(0, 10);
-                        });
-                      },
-                    )),
-                Expanded(
-                    flex: 1,
-                    child: TextField(
-                      readOnly: true,
-                      controller: this.endDateController,
-                      decoration: InputDecoration(hintText: 'End Date'),
-                      onTap: () async {
-                        var date = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2100));
-                        setState(() {
-                          this.endDateController.text =
-                              date.toString().substring(0, 10);
-                        });
-                      },
-                    )),
-              ],
-            ),
-            _itemViewSelected == total
-                ? CategorySpendingChart(categorySpending: categorySpending)
-                : (_itemViewSelected == cummulative
-                    ? CummulativeSpendingChart(
-                        timeSeries: userTransactionByCategoryList)
-                    : TransactionList(currentTransactionList, executeUpdate)),
-            TextButton(
-              child: Text("Export to CSV"),
-              onPressed: () => _generateCsvFile(recentTransactions),
-            ),
-          ],
-        ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+              flex: 1,
+              child: SelectFormField(
+                type: SelectFormFieldType.dropdown, // or can be dialog
+                labelText: 'View',
+                items: _itemViewList,
+                onChanged: (val) => setState(() {
+                  _itemViewSelected = val;
+                }),
+                onSaved: (val) => print(val),
+              )),
+          Expanded(
+              flex: 1,
+              child: SelectFormField(
+                type: SelectFormFieldType.dropdown, // or can be dialog
+                initialValue: null,
+                labelText: 'Spending category',
+                items: _itemCategoryList,
+                onChanged: (val) => setState(() {
+                  this.categoryController.text = val;
+                }),
+              )),
+          Expanded(
+              flex: 1,
+              child: Row(
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: TextField(
+                        readOnly: true,
+                        controller: this.startDateController,
+                        decoration: InputDecoration(hintText: 'Start Date'),
+                        onTap: () async {
+                          var date = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2100));
+                          setState(() {
+                            this.startDateController.text =
+                                date.toString().substring(0, 10);
+                          });
+                        },
+                      )),
+                  Expanded(
+                      flex: 1,
+                      child: TextField(
+                        readOnly: true,
+                        controller: this.endDateController,
+                        decoration: InputDecoration(hintText: 'End Date'),
+                        onTap: () async {
+                          var date = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2100));
+                          setState(() {
+                            this.endDateController.text =
+                                date.toString().substring(0, 10);
+                          });
+                        },
+                      ))
+                ],
+              )),
+          Expanded(
+              flex: 6,
+              child: _itemViewSelected == total
+                  ? CategorySpendingChart(categorySpending: categorySpending)
+                  : (_itemViewSelected == cummulative
+                      ? CummulativeSpendingChart(
+                          timeSeries: userTransactionByCategoryList)
+                      : TransactionList(
+                          currentTransactionList, executeUpdate))),
+          Expanded(
+              flex: 1,
+              child: TextButton(
+                child: Text("Export to CSV"),
+                onPressed: () => _generateCsvFile(recentTransactions),
+              )),
+          Expanded(flex: 1, child: Container()),
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
